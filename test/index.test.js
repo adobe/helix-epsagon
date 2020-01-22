@@ -11,15 +11,127 @@
  */
 
 /* eslint-env mocha */
-
-'use strict';
-
 const assert = require('assert');
-const index = require('../src/index.js').main;
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+const { wrap } = require('@adobe/openwhisk-action-utils');
+
+const DEFAULT_PARAMS = {
+  testParams: 'foo',
+};
+
+const simpleAction = () => 'ok';
+
+let epsagonified = 0;
+
+const wrapperStub = sinon.stub().callsFake((action) => (params) => {
+  epsagonified += 1;
+  return action(params);
+});
+
+const epsagon = proxyquire('../src/epsagon.js', {
+  epsagon: {
+    openWhiskWrapper: wrapperStub,
+  },
+});
 
 describe('Index Tests', () => {
-  it('index function is present', async () => {
-    const result = await index();
-    assert.equal(result, 'Hello, world.');
+  beforeEach(() => {
+    wrapperStub.resetHistory();
+  });
+
+  it('action w/o token does not instrument epsagon', async () => {
+    const expected = epsagonified;
+    const result = await wrap(simpleAction).with(epsagon)(DEFAULT_PARAMS);
+    assert.equal('ok', result);
+    assert.equal(expected, epsagonified, 'epsagon not instrumented');
+  });
+
+  it('action with token instruments epsagon', async () => {
+    const expected = epsagonified + 1;
+    const result = await wrap(simpleAction).with(epsagon)({
+      ...DEFAULT_PARAMS,
+      EPSAGON_TOKEN: '1234',
+    });
+    assert.equal(result, 'ok');
+    assert.equal(expected, epsagonified, 'epsagon instrumented');
+
+    // check called with default args
+    const call = wrapperStub.getCall(0);
+    assert.strictEqual(call.args[0], simpleAction);
+    assert.deepEqual(call.args[1], {
+      appName: 'Helix Services',
+      ignoredKeys: [
+        /[A-Z0-9_]+/,
+      ],
+      metadataOnly: false,
+      sendTimeout: 2,
+      token_param: 'EPSAGON_TOKEN',
+      urlPatternsToIgnore: [
+        'api.coralogix.com',
+      ],
+    });
+  });
+
+  it('can change epsagon options', async () => {
+    const expected = epsagonified + 1;
+    const result = await wrap(simpleAction).with(epsagon, {
+      appName: 'test service',
+      ignoredKeys: [],
+      metadataOnly: true,
+      sendTimeout: 3,
+      token_param: 'MY_TOKEN',
+      urlPatternsToIgnore: [
+        'api.logger.com',
+      ],
+    })({
+      ...DEFAULT_PARAMS,
+      MY_TOKEN: '1234',
+    });
+    assert.equal(result, 'ok');
+    assert.equal(expected, epsagonified, 'epsagon instrumented');
+
+    // check called with default args
+    const call = wrapperStub.getCall(0);
+    assert.strictEqual(call.args[0], simpleAction);
+    assert.deepEqual(call.args[1], {
+      appName: 'test service',
+      ignoredKeys: [],
+      metadataOnly: true,
+      sendTimeout: 3,
+      token_param: 'MY_TOKEN',
+      urlPatternsToIgnore: [
+        'api.logger.com',
+      ],
+    });
+  });
+
+  it('can use different token param', async () => {
+    const expected = epsagonified + 1;
+    const result = await wrap(simpleAction).with(epsagon, {
+      token_param: 'MY_TOKEN',
+    })({
+      ...DEFAULT_PARAMS,
+      MY_TOKEN: '1234',
+    });
+    assert.equal(result, 'ok');
+    assert.equal(expected, epsagonified, 'epsagon instrumented');
+  });
+
+
+  it('index function runs epsagon once for each invocation', async () => {
+    const main = wrap(simpleAction).with(epsagon);
+
+    const expected = epsagonified + 2;
+
+    await main({
+      ...DEFAULT_PARAMS,
+      EPSAGON_TOKEN: 'foobar',
+    });
+    await main({
+      ...DEFAULT_PARAMS,
+      EPSAGON_TOKEN: 'foobar',
+    });
+    assert.equal(expected, epsagonified, 'epsagon instrumented');
   });
 });
