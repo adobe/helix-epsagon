@@ -1,3 +1,10 @@
+# 1.0.0 (2020-01-23)
+
+
+### Bug Fixes
+
+* **core:** provide initial version ([#1](https://github.com/adobe/helix-epsagon/issues/1)) ([93b71f6](https://github.com/adobe/helix-epsagon/commit/93b71f66e2f3a8624f793c676c7331743aed1c19))
+
 ## [1.3.1](https://github.com/adobe/helix-library/compare/v1.3.0...v1.3.1) (2020-01-19)
 
 
