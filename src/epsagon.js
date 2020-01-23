@@ -55,6 +55,7 @@ function epsagon(action, opts = {}) {
     appName: 'Helix Services',
     metadataOnly: false, // Optional, send more trace data
     ignoredKeys: [/[A-Z0-9_]+/],
+    httpErrorStatusCode: 500,
     urlPatternsToIgnore: ['api.coralogix.com'],
     ...opts,
   };
