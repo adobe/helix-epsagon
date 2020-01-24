@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/adobe/helix-epsagon/compare/v1.0.0...v1.1.0) (2020-01-24)
+
+
+### Features
+
+* **epsagon:** ignore status codes 4xx ([dac95af](https://github.com/adobe/helix-epsagon/commit/dac95af3edc1059ab69d2a5a84fea8b0e624f452)), closes [#2](https://github.com/adobe/helix-epsagon/issues/2)
+
 # 1.0.0 (2020-01-23)
 
 
