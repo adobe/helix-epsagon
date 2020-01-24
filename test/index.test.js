@@ -67,6 +67,7 @@ describe('Index Tests', () => {
       metadataOnly: false,
       sendTimeout: 2,
       token_param: 'EPSAGON_TOKEN',
+      httpErrorStatusCode: 500,
       urlPatternsToIgnore: [
         'api.coralogix.com',
       ],
@@ -100,6 +101,7 @@ describe('Index Tests', () => {
       metadataOnly: true,
       sendTimeout: 3,
       token_param: 'MY_TOKEN',
+      httpErrorStatusCode: 500,
       urlPatternsToIgnore: [
         'api.logger.com',
       ],
