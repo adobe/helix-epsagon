@@ -61,9 +61,7 @@ describe('Index Tests', () => {
     assert.strictEqual(call.args[0], simpleAction);
     assert.deepEqual(call.args[1], {
       appName: 'Helix Services',
-      ignoredKeys: [
-        /[A-Z0-9_]+/,
-      ],
+      ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/],
       metadataOnly: false,
       sendTimeout: 2,
       token_param: 'EPSAGON_TOKEN',
