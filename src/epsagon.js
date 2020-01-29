@@ -65,7 +65,6 @@ function epsagon(action, opts = {}) {
       const { __ow_logger: log = console } = params;
       // ensure that epsagon is only required, if a token is present.
       // This is to avoid invoking their patchers otherwise.
-      process.env.EPSAGON_SEND_TIMEOUT_SEC = options.sendTimeout;
       // eslint-disable-next-line global-require
       const { openWhiskWrapper } = require('epsagon');
       log.info('instrumenting epsagon.');
