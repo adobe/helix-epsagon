@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/adobe/helix-epsagon/compare/v1.1.1...v1.1.2) (2020-01-29)
+
+
+### Bug Fixes
+
+* **core:** use proper key filter ([a481b38](https://github.com/adobe/helix-epsagon/commit/a481b380e910f6fd304c8e4159e6f10dc6c83a10)), closes [#9](https://github.com/adobe/helix-epsagon/issues/9)
+* **deps:** use epsagon 1.49.0 with support for sendTimeout ([d8dd6f5](https://github.com/adobe/helix-epsagon/commit/d8dd6f57d8e9341e47cb783456263df0a5d45b9d)), closes [#10](https://github.com/adobe/helix-epsagon/issues/10)
+
 ## [1.1.1](https://github.com/adobe/helix-epsagon/compare/v1.1.0...v1.1.1) (2020-01-26)
 
 
