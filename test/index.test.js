@@ -63,7 +63,7 @@ describe('Index Tests', () => {
       appName: 'Helix Services',
       ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/],
       metadataOnly: false,
-      sendTimeout: 2,
+      sendTimeout: 2000,
       token_param: 'EPSAGON_TOKEN',
       httpErrorStatusCode: 500,
       urlPatternsToIgnore: [
@@ -78,7 +78,7 @@ describe('Index Tests', () => {
       appName: 'test service',
       ignoredKeys: [],
       metadataOnly: true,
-      sendTimeout: 3,
+      sendTimeout: 3000,
       token_param: 'MY_TOKEN',
       urlPatternsToIgnore: [
         'api.logger.com',
@@ -97,7 +97,7 @@ describe('Index Tests', () => {
       appName: 'test service',
       ignoredKeys: [],
       metadataOnly: true,
-      sendTimeout: 3,
+      sendTimeout: 3000,
       token_param: 'MY_TOKEN',
       httpErrorStatusCode: 500,
       urlPatternsToIgnore: [
