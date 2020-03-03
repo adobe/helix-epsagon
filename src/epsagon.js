@@ -35,8 +35,8 @@
  *        Original OpenWhisk action main function
  * @param {EpsagonOptions} [opts]
  *        Additional epsagon options
- * @param {number} [opts.sendTimeout=2]
- *        Time in seconds after which the request to the epsagon infrastructure times out.
+ * @param {number} [opts.sendTimeout=2000]
+ *        Time in milliseconds after which the request to the epsagon infrastructure times out.
  * @param {string} [opts.token_param=EPSAGON_TOKEN]
  *        The name of the action parameter that contains the epsagon token.
  * @param {string} [opts.appName=Helix Service]
@@ -50,7 +50,7 @@
  */
 function epsagon(action, opts = {}) {
   const options = {
-    sendTimeout: 2,
+    sendTimeout: 2000,
     token_param: 'EPSAGON_TOKEN',
     appName: 'Helix Services',
     metadataOnly: false, // Optional, send more trace data

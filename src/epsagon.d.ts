@@ -21,8 +21,8 @@ declare type ActionFunction = (params: object) => object;
  */
 export declare interface EpsagonOptions {
   /**
-   * Timeout in seconds after which the request to the epsagon infrastructure times out.
-   * @default 2
+   * Timeout in milliseconds after which the request to the epsagon infrastructure times out.
+   * @default 2000
    */
   sendTimeout?: number,
 
