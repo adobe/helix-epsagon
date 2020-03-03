@@ -1,3 +1,11 @@
+## [1.1.5](https://github.com/adobe/helix-epsagon/compare/v1.1.4...v1.1.5) (2020-03-03)
+
+
+### Bug Fixes
+
+* **api:** use correct default timeout ([c097d94](https://github.com/adobe/helix-epsagon/commit/c097d94f1178231eb266e4739bd694abcab3f2e1)), closes [#21](https://github.com/adobe/helix-epsagon/issues/21)
+* **fetch:** use old epsagon version that works with helix-fetch ([ca6346a](https://github.com/adobe/helix-epsagon/commit/ca6346adc916cb2c46445c0fd6853ce67f48720f)), closes [#22](https://github.com/adobe/helix-epsagon/issues/22)
+
 ## [1.1.4](https://github.com/adobe/helix-epsagon/compare/v1.1.3...v1.1.4) (2020-03-03)
 
 
