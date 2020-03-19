@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/adobe/helix-epsagon/compare/v1.1.7...v1.1.8) (2020-03-19)
+
+
+### Bug Fixes
+
+* **deps:** update epsagon-node to 1.57.2 ([#35](https://github.com/adobe/helix-epsagon/issues/35)) ([5254d77](https://github.com/adobe/helix-epsagon/commit/5254d775f87a07f1b2daef558659f67f3088ddb0))
+
 ## [1.1.7](https://github.com/adobe/helix-epsagon/compare/v1.1.6...v1.1.7) (2020-03-17)
 
 
