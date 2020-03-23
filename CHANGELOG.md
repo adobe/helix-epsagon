@@ -1,3 +1,10 @@
+## [1.1.9](https://github.com/adobe/helix-epsagon/compare/v1.1.8...v1.1.9) (2020-03-23)
+
+
+### Bug Fixes
+
+* **epsagon:** downgrade to 1.53.3 again ([#37](https://github.com/adobe/helix-epsagon/issues/37)) ([82adef6](https://github.com/adobe/helix-epsagon/commit/82adef692da81affec6b009427906115ae60f7d9))
+
 ## [1.1.8](https://github.com/adobe/helix-epsagon/compare/v1.1.7...v1.1.8) (2020-03-19)
 
 
