@@ -1,3 +1,10 @@
+## [1.1.10](https://github.com/adobe/helix-epsagon/compare/v1.1.9...v1.1.10) (2020-03-24)
+
+
+### Bug Fixes
+
+* **filter:** filter more headers and request_body ([#41](https://github.com/adobe/helix-epsagon/issues/41)) ([73149b7](https://github.com/adobe/helix-epsagon/commit/73149b77b0a87a14913a40ef830febc611f09556)), closes [#40](https://github.com/adobe/helix-epsagon/issues/40)
+
 ## [1.1.9](https://github.com/adobe/helix-epsagon/compare/v1.1.8...v1.1.9) (2020-03-23)
 
 
