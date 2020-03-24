@@ -61,7 +61,7 @@ describe('Index Tests', () => {
     assert.strictEqual(call.args[0], simpleAction);
     assert.deepEqual(call.args[1], {
       appName: 'Helix Services',
-      ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/],
+      ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authentication', 'request_body'],
       metadataOnly: false,
       sendTimeout: 2000,
       token_param: 'EPSAGON_TOKEN',
@@ -117,7 +117,6 @@ describe('Index Tests', () => {
     assert.equal(result, 'ok');
     assert.equal(expected, epsagonified, 'epsagon instrumented');
   });
-
 
   it('index function runs epsagon once for each invocation', async () => {
     const main = wrap(simpleAction).with(epsagon);

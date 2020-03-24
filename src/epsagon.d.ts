@@ -40,7 +40,7 @@ export declare interface EpsagonOptions {
 
   /**
    * Array of patterns for parameter keys to ignore in traces.
-   * @default [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*\/]
+   * @default [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*\/, 'authentication', 'request_body']
    */
   ignoredKeys?: Array<RegExp|string>,
 
