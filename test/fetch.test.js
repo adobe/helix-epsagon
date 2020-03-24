@@ -34,7 +34,6 @@ async function testFetch() {
 }
 
 async function run(params) {
-  // process.env.EPSAGON_DEBUG = 'TRUE';
   // eslint-disable-next-line global-require
   const { openWhiskWrapper } = require('epsagon');
   // eslint-disable-next-line no-console
