@@ -1,3 +1,10 @@
+## [1.1.11](https://github.com/adobe/helix-epsagon/compare/v1.1.10...v1.1.11) (2020-03-26)
+
+
+### Bug Fixes
+
+* **filter:** ensure authorization header is filtered ([#43](https://github.com/adobe/helix-epsagon/issues/43)) ([f9d9920](https://github.com/adobe/helix-epsagon/commit/f9d9920e7eae6d17d3b90c906db7e542b4d0054e))
+
 ## [1.1.10](https://github.com/adobe/helix-epsagon/compare/v1.1.9...v1.1.10) (2020-03-24)
 
 
