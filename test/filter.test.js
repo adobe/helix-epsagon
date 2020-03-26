@@ -19,11 +19,11 @@ const { wrap } = require('@adobe/openwhisk-action-utils');
 const { epsagon } = require('../src/index.js');
 
 const simpleAction = async () => {
-  // issue a request with authentication
+  // issue a request with authorization
   await rp({
     uri: 'http://localhost:1234/test',
     headers: {
-      AuthentiCation: 'foobar',
+      AuthoRization: 'foobar',
       other: 'test',
     },
   });
@@ -83,7 +83,7 @@ describe('Filter Tests', () => {
     assert.deepEqual(traces[0].resource.metadata.params, {
       someParam: 'foo',
     });
-    // the 2nd trace is the http request. check that the authentication header is filtered
+    // the 2nd trace is the http request. check that the authorization header is filtered
     const headers = traces[1].resource.metadata.request_headers;
     delete headers['epsagon-trace-id'];
     assert.deepEqual(headers, {

@@ -42,7 +42,7 @@
  * @param {string} [opts.appName=Helix Service]
  *        The name of _this_ application.
  * @param {Array<RegExp,string>} [opts.ignoredKeys=[/^[A-Z][A-Z0-9_]+$/, /^__ow_.*\/,
- *        'authentication', 'request_body']]
+ *        'authorization', 'request_body']]
  *        Array of patterns for parameter keys to ignore in traces.
  * @param {Array<RegExp,string>} [opts.urlPatternsToIgnore=['api.coralogix.com']]
  *        Array of patterns for urls to ignore in traces.
@@ -55,7 +55,7 @@ function epsagon(action, opts = {}) {
     token_param: 'EPSAGON_TOKEN',
     appName: 'Helix Services',
     metadataOnly: false, // Optional, send more trace data
-    ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authentication', 'request_body'],
+    ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authorization', 'request_body'],
     httpErrorStatusCode: 500,
     urlPatternsToIgnore: ['api.coralogix.com'],
     ...opts,
