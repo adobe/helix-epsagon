@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/adobe/helix-epsagon/compare/v1.1.14...v1.2.0) (2020-04-08)
+
+
+### Features
+
+* **epsagon:** add x-last-activation-id ([#51](https://github.com/adobe/helix-epsagon/issues/51)) ([acabded](https://github.com/adobe/helix-epsagon/commit/acabded5dc71b4842ab8caa3d6b68c629b022fa5)), closes [#50](https://github.com/adobe/helix-epsagon/issues/50)
+
 ## [1.1.14](https://github.com/adobe/helix-epsagon/compare/v1.1.13...v1.1.14) (2020-04-08)
 
 
