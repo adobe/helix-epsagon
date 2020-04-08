@@ -33,15 +33,18 @@ const simpleAction = async () => {
     method: 'post',
     body: 'secret',
   });
-  return 'ok';
+  return {
+    body: 'ok',
+  };
 };
 
 describe('Filter Tests', () => {
   it('filters out secrets from action params', async () => {
+    const actId = crypto.randomBytes(16).toString('hex');
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/helix/helix-epsagon@1.0.2',
       __OW_ACTION_VERSION: '0.0.3',
-      __OW_ACTIVATION_ID: crypto.randomBytes(16).toString('hex'),
+      __OW_ACTIVATION_ID: actId,
       __OW_API_HOST: 'https://runtime.adobe.io',
       __OW_NAMESPACE: 'helix-testing',
       __OW_TRANSACTION_ID: crypto.randomBytes(16).toString('hex'),
@@ -73,7 +76,12 @@ describe('Filter Tests', () => {
       __ow_path: '',
       EPSAGON_TOKEN: '1234',
     });
-    assert.equal(result, 'ok');
+    assert.deepEqual(result, {
+      body: 'ok',
+      headers: {
+        'x-last-activation-id': actId,
+      },
+    });
     await scope0.done();
     await scope1.done();
 
