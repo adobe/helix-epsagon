@@ -40,7 +40,7 @@ module.exports.main = wrap(main)
 | [opts.sendTimeout] | <code>number</code> | <code>2000</code> | Time in milliseconds after which the request to the epsagon infrastructure times out. |
 | [opts.token_param] | <code>string</code> | <code>&quot;EPSAGON_TOKEN&quot;</code> | The name of the action parameter that contains the epsagon token. |
 | [opts.appName] | <code>string</code> | <code>&quot;Helix Service&quot;</code> | The name of _this_ application. |
-| [opts.ignoredKeys=[/^[A-Z][A-Z0-9_]+$/, /^__ow_.*\/,
-       'authorization', 'request_body']] | <code>Array.&lt;RegExp, string&gt;</code> |  | Array of patterns for parameter keys to ignore in traces. |
+| [opts.ignoredKeys] | <code>Array.&lt;RegExp, string&gt;</code> | <code>[/^[A-Z][A-Z0-9_]+$/, /^__ow_.*\/, &#x27;authorization&#x27;, &#x27;request_body&#x27;]</code> | Array of patterns for parameter keys to ignore in traces. |
 | [opts.urlPatternsToIgnore] | <code>Array.&lt;RegExp, string&gt;</code> | <code>[&#x27;api.coralogix.com&#x27;]</code> | Array of patterns for urls to ignore in traces. |
+| [opts.disableHttpResponseBodyCapture] | <code>boolean</code> | <code>true</code> | Disables response capture. |
 

@@ -49,6 +49,12 @@ export declare interface EpsagonOptions {
    * @default ['api.coralogix.com']
    */
   urlPatternsToIgnore?: Array<RegExp|string>,
+
+  /**
+   * Disables response capture.
+   * @default true
+   */
+  disableHttpResponseBodyCapture?: boolean,
 }
 
 /**
