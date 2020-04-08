@@ -69,6 +69,7 @@ describe('Index Tests', () => {
       urlPatternsToIgnore: [
         'api.coralogix.com',
       ],
+      disableHttpResponseBodyCapture: true,
     });
   });
 
@@ -103,6 +104,7 @@ describe('Index Tests', () => {
       urlPatternsToIgnore: [
         'api.logger.com',
       ],
+      disableHttpResponseBodyCapture: true,
     });
   });
 
