@@ -1,3 +1,10 @@
+## [1.1.14](https://github.com/adobe/helix-epsagon/compare/v1.1.13...v1.1.14) (2020-04-08)
+
+
+### Bug Fixes
+
+* **epsagon:** use latest epsagon with disabled response capture ([#48](https://github.com/adobe/helix-epsagon/issues/48)) ([590d89d](https://github.com/adobe/helix-epsagon/commit/590d89d82ab6d678d940b3dc317cfc400f6b52da)), closes [#36](https://github.com/adobe/helix-epsagon/issues/36)
+
 ## [1.1.13](https://github.com/adobe/helix-epsagon/compare/v1.1.12...v1.1.13) (2020-04-07)
 
 
