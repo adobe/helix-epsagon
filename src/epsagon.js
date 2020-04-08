@@ -64,6 +64,7 @@ function epsagon(action, opts = {}) {
   };
 
   return async (params) => {
+    let ret;
     if (params && params[options.token_param]) {
       const { __ow_logger: log = console } = params;
       // ensure that epsagon is only required, if a token is present.
@@ -71,9 +72,24 @@ function epsagon(action, opts = {}) {
       // eslint-disable-next-line global-require
       const { openWhiskWrapper } = require('epsagon');
       log.info('instrumenting epsagon.');
-      return openWhiskWrapper(action, options)(params);
+      ret = openWhiskWrapper(action, options)(params);
+    } else {
+      ret = action(params);
     }
-    return action(params);
+    // for web actions, add the `x-last-activation-id` header.
+    // see https://github.com/adobe/helix-epsagon/issues/50
+    // this is a temporary solution until a better sequence activation flow handling is provided
+    // by I/O runtime.
+    if (params.__ow_method) {
+      if (ret.then) {
+        ret = await ret;
+      }
+      if (!ret.headers) {
+        ret.headers = {};
+      }
+      ret.headers['x-last-activation-id'] = process.env.__OW_ACTIVATION_ID;
+    }
+    return ret;
   };
 }
 

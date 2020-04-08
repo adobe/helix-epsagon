@@ -11,7 +11,9 @@
  */
 
 /* eslint-env mocha */
+/* eslint-disable no-underscore-dangle */
 const assert = require('assert');
+const crypto = require('crypto');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const { wrap } = require('@adobe/openwhisk-action-utils');
@@ -36,14 +38,75 @@ const epsagon = proxyquire('../src/epsagon.js', {
 });
 
 describe('Index Tests', () => {
+  let activationId;
   beforeEach(() => {
     wrapperStub.resetHistory();
+    activationId = crypto.randomBytes(16).toString('hex');
+    Object.assign(process.env, {
+      __OW_ACTION_NAME: '/helix/helix-epsagon@1.0.2',
+      __OW_ACTION_VERSION: '0.0.3',
+      __OW_ACTIVATION_ID: activationId,
+      __OW_API_HOST: 'https://runtime.adobe.io',
+      __OW_NAMESPACE: 'helix-testing',
+    });
+  });
+  afterEach(() => {
+    delete process.env.__OW_ACTION_NAME;
+    delete process.env.__OW_ACTION_VERSION;
+    delete process.env.__OW_ACTIVATION_ID;
+    delete process.env.__OW_API_HOST;
+    delete process.env.__OW_NAMESPACE;
   });
 
   it('action w/o token does not instrument epsagon', async () => {
     const expected = epsagonified;
     const result = await wrap(simpleAction).with(epsagon)(DEFAULT_PARAMS);
     assert.equal('ok', result);
+    assert.equal(expected, epsagonified, 'epsagon not instrumented');
+  });
+
+  it('adds x-last-activation-token for web-actions', async () => {
+    const expected = epsagonified;
+    const result = await wrap(() => ({ body: 'ok' })).with(epsagon)({
+      ...DEFAULT_PARAMS,
+      __ow_method: 'get',
+    });
+    assert.deepEqual(result, {
+      body: 'ok',
+      headers: {
+        'x-last-activation-id': activationId,
+      },
+    });
+    assert.equal(expected, epsagonified, 'epsagon not instrumented');
+  });
+
+  it('adds x-last-activation-token for async web-actions', async () => {
+    const expected = epsagonified;
+    const result = await wrap(async () => ({ body: 'ok' })).with(epsagon)({
+      ...DEFAULT_PARAMS,
+      __ow_method: 'get',
+    });
+    assert.deepEqual(result, {
+      body: 'ok',
+      headers: {
+        'x-last-activation-id': activationId,
+      },
+    });
+    assert.equal(expected, epsagonified, 'epsagon not instrumented');
+  });
+
+  it('adds x-last-activation-token for web-actions with header', async () => {
+    const expected = epsagonified;
+    const result = await wrap(() => ({ body: 'ok', headers: {} })).with(epsagon)({
+      ...DEFAULT_PARAMS,
+      __ow_method: 'get',
+    });
+    assert.deepEqual(result, {
+      body: 'ok',
+      headers: {
+        'x-last-activation-id': activationId,
+      },
+    });
     assert.equal(expected, epsagonified, 'epsagon not instrumented');
   });
 
