@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/adobe/helix-epsagon/compare/v1.2.2...v1.3.0) (2020-05-18)
+
+
+### Features
+
+* **epsagon:** update to 1.64.0 ([#61](https://github.com/adobe/helix-epsagon/issues/61)) ([c3a1fc3](https://github.com/adobe/helix-epsagon/commit/c3a1fc330bcb7aa0ef31e998a4aeabc8f684a870))
+
 ## [1.2.2](https://github.com/adobe/helix-epsagon/compare/v1.2.1...v1.2.2) (2020-05-12)
 
 
