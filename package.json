@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/adobe/helix-epsagon#readme",
   "dependencies": {
-    "epsagon": "1.70.1"
+    "epsagon": "1.70.2"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.0",
@@ -34,7 +34,7 @@
     "codecov": "3.7.0",
     "commitizen": "4.1.2",
     "cz-conventional-changelog": "3.2.0",
-    "eslint": "7.1.0",
+    "eslint": "7.2.0",
     "eslint-plugin-header": "3.0.0",
     "eslint-plugin-import": "2.20.2",
     "jsdoc-to-markdown": "6.0.1",
