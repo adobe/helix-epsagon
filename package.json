@@ -26,7 +26,7 @@
     "epsagon": "1.70.3"
   },
   "devDependencies": {
-    "@adobe/eslint-config-helix": "1.1.0",
+    "@adobe/eslint-config-helix": "1.1.1",
     "@adobe/helix-fetch": "1.6.1",
     "@adobe/openwhisk-action-utils": "4.2.2",
     "@semantic-release/changelog": "5.0.1",
