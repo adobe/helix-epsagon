@@ -93,5 +93,4 @@ function epsagon(action, opts = {}) {
   };
 }
 
-
 module.exports = epsagon;
