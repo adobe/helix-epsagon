@@ -14,25 +14,37 @@
 const crypto = require('crypto');
 const assert = require('assert');
 const nock = require('nock');
-const rp = require('request-promise-native');
+const fetchAPI = require('@adobe/helix-fetch');
 const { wrap } = require('@adobe/openwhisk-action-utils');
 const { epsagon } = require('../src/index.js');
 
 const simpleAction = async () => {
+  const { fetch } = fetchAPI.context({ httpProtocol: 'http1', httpsProtocols: ['http1'] });
+
   // issue a request with authorization
-  await rp({
-    uri: 'http://localhost:1234/test',
+  let response = await fetch('http://example.com/test', {
     headers: {
       AuthoRization: 'foobar',
       other: 'test',
     },
   });
+
+  if (!response.ok) {
+    throw new Error(`${response.status} - "${await response.text()}"`);
+  }
+  await response.buffer();
+
   // issue a post request to okta.com
-  await rp({
-    uri: 'https://foo.okta.com',
-    method: 'post',
+  response = await fetch('https://foo.okta.com', {
+    method: 'POST',
     body: 'secret',
   });
+
+  if (!response.ok) {
+    throw new Error(`${response.status} - "${await response.text()}"`);
+  }
+  await response.buffer();
+
   return {
     body: 'ok',
   };
@@ -51,7 +63,7 @@ describe('Filter Tests', () => {
     });
 
     let traces = null;
-    const scope0 = nock('http://localhost:1234')
+    const scope0 = nock('http://example.com')
       .post('/')
       .reply((uri, body) => {
         traces = body.events;
@@ -64,7 +76,7 @@ describe('Filter Tests', () => {
       .reply(200, 'ok');
 
     const result = await wrap(simpleAction).with(epsagon, {
-      traceCollectorURL: 'http://localhost:1234/',
+      traceCollectorURL: 'http://example.com/',
     })({
       SUPER_SECRET: 'abc',
       someParam: 'foo',
@@ -95,8 +107,12 @@ describe('Filter Tests', () => {
     const headers = traces[1].resource.metadata.request_headers;
     delete headers['epsagon-trace-id'];
     assert.deepEqual(headers, {
-      host: 'localhost:1234',
+      host: 'example.com',
       other: 'test',
+      accept: 'application/json,text/*;q=0.9,*/*;q=0.8',
+      'accept-encoding': 'br;q=1, gzip;q=0.8, deflate;q=0.5',
+      connection: 'keep-alive',
+      'user-agent': 'helix-fetch',
     });
     // the 3rd trace is the post to okta. ensure that the request_body is empty.
     assert.equal(traces[2].resource.metadata.request_body, undefined);
