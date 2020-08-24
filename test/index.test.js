@@ -14,7 +14,7 @@
 /* eslint-disable no-underscore-dangle */
 const assert = require('assert');
 const crypto = require('crypto');
-const proxyquire = require('proxyquire');
+const proxyquire = require('proxyquire').noPreserveCache();
 const sinon = require('sinon');
 const { wrap } = require('@adobe/openwhisk-action-utils');
 
@@ -31,16 +31,20 @@ const wrapperStub = sinon.stub().callsFake((action) => (params) => {
   return action(params);
 });
 
+const actionStatusStub = sinon.stub().callsFake((action) => (params) => action(params));
+
 const epsagon = proxyquire('../src/epsagon.js', {
   epsagon: {
     openWhiskWrapper: wrapperStub,
   },
+  './action-status.js': actionStatusStub,
 });
 
 describe('Index Tests', () => {
   let activationId;
   beforeEach(() => {
     wrapperStub.resetHistory();
+    actionStatusStub.resetHistory();
     activationId = crypto.randomBytes(16).toString('hex');
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/helix/helix-epsagon@1.0.2',
@@ -117,11 +121,12 @@ describe('Index Tests', () => {
       EPSAGON_TOKEN: '1234',
     });
     assert.equal(result, 'ok');
-    assert.equal(expected, epsagonified, 'epsagon instrumented');
+    assert.equal(epsagonified, expected, 'epsagon instrumented');
 
     // check called with default args
+    const statusCall = actionStatusStub.getCall(0);
+    assert.strictEqual(statusCall.args[0], simpleAction);
     const call = wrapperStub.getCall(0);
-    assert.strictEqual(call.args[0], simpleAction);
     assert.deepEqual(call.args[1], {
       appName: 'Helix Services',
       ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authorization', 'request_body'],
@@ -152,11 +157,12 @@ describe('Index Tests', () => {
       MY_TOKEN: '1234',
     });
     assert.equal(result, 'ok');
-    assert.equal(expected, epsagonified, 'epsagon instrumented');
+    assert.equal(epsagonified, expected, 'epsagon instrumented');
 
     // check called with default args
+    const statusCall = actionStatusStub.getCall(0);
+    assert.strictEqual(statusCall.args[0], simpleAction);
     const call = wrapperStub.getCall(0);
-    assert.strictEqual(call.args[0], simpleAction);
     assert.deepEqual(call.args[1], {
       appName: 'test service',
       ignoredKeys: [],
@@ -180,7 +186,7 @@ describe('Index Tests', () => {
       MY_TOKEN: '1234',
     });
     assert.equal(result, 'ok');
-    assert.equal(expected, epsagonified, 'epsagon instrumented');
+    assert.equal(epsagonified, expected, 'epsagon instrumented');
   });
 
   it('index function runs epsagon once for each invocation', async () => {
@@ -196,6 +202,6 @@ describe('Index Tests', () => {
       ...DEFAULT_PARAMS,
       EPSAGON_TOKEN: 'foobar',
     });
-    assert.equal(expected, epsagonified, 'epsagon instrumented');
+    assert.equal(epsagonified, expected, 'epsagon instrumented');
   });
 });

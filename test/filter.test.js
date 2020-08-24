@@ -19,7 +19,12 @@ const { wrap } = require('@adobe/openwhisk-action-utils');
 const { epsagon } = require('../src/index.js');
 
 const simpleAction = async () => {
-  const { fetch } = fetchAPI.context({ httpProtocol: 'http1', httpsProtocols: ['http1'] });
+  // create own context and disable http2
+  const context = fetchAPI.context({
+    httpProtocol: 'http1',
+    httpsProtocols: ['http1'],
+  });
+  const { fetch } = context;
 
   // issue a request with authorization
   let response = await fetch('http://example.com/test', {
@@ -45,12 +50,17 @@ const simpleAction = async () => {
   }
   await response.buffer();
 
+  await context.disconnectAll();
   return {
     body: 'ok',
   };
 };
 
 describe('Filter Tests', () => {
+  after(async () => {
+    await fetchAPI.disconnectAll();
+  });
+
   it('filters out secrets from action params', async () => {
     const actId = crypto.randomBytes(16).toString('hex');
     Object.assign(process.env, {

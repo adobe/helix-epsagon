@@ -72,7 +72,13 @@ function epsagon(action, opts = {}) {
       // eslint-disable-next-line global-require
       const { openWhiskWrapper } = require('epsagon');
       log.info('instrumenting epsagon.');
-      ret = openWhiskWrapper(action, options)(params);
+
+      // same as above - only require if really needed
+      // eslint-disable-next-line global-require
+      const traceActionStatus = require('./action-status.js');
+      const tracedAction = traceActionStatus(action);
+
+      ret = openWhiskWrapper(tracedAction, options)(params);
     } else {
       ret = action(params);
     }

@@ -51,6 +51,10 @@ async function run(params) {
 }
 
 describe('Helix Fetch', () => {
+  after(async () => {
+    await fetchAPI.disconnectAll();
+  });
+
   it('Runs action with helix fetch.', async () => {
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/tripod/epsagon-testing@1.0.2',
