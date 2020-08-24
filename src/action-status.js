@@ -46,7 +46,7 @@ function addToMetadata(log, map) {
   try {
     const tracerObj = tracer.getTrace();
     if (!tracerObj || !tracerObj.currRunner) {
-      log.debug('Failed to data without an active tracer');
+      log.debug('Failed to log data without an active tracer');
       return;
     }
     eventInterface.addToMetadata(tracerObj.currRunner, map);
