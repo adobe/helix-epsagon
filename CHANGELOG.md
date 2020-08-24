@@ -1,3 +1,18 @@
+# [1.4.0](https://github.com/adobe/helix-epsagon/compare/v1.3.13...v1.4.0) (2020-08-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency epsagon to v1.75.0 ([f7a1e6e](https://github.com/adobe/helix-epsagon/commit/f7a1e6ef956615fa484642fad2a9a90c16b79e02))
+* **deps:** update external fixes ([aeb3603](https://github.com/adobe/helix-epsagon/commit/aeb3603830c5c4b6149710c1926b27dd1b50e4e9))
+* **deps:** update external fixes ([cdec149](https://github.com/adobe/helix-epsagon/commit/cdec149b16e44fb4ab557044a3871f1666e71041))
+* **deps:** update external fixes ([b9ae716](https://github.com/adobe/helix-epsagon/commit/b9ae7166c01b966139678adc348abfebe00be97f))
+
+
+### Features
+
+* **stats:** add memory and concurrency stats ([#116](https://github.com/adobe/helix-epsagon/issues/116)) ([eb33498](https://github.com/adobe/helix-epsagon/commit/eb334982b2b9376c2ef445c18b404972b9f74d15)), closes [#114](https://github.com/adobe/helix-epsagon/issues/114)
+
 ## [1.3.13](https://github.com/adobe/helix-epsagon/compare/v1.3.12...v1.3.13) (2020-07-02)
 
 
