@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/adobe/helix-epsagon/compare/v1.4.0...v1.5.0) (2020-08-26)
+
+
+### Features
+
+* **status:** better container instrumentation ([#117](https://github.com/adobe/helix-epsagon/issues/117)) ([7a76bb8](https://github.com/adobe/helix-epsagon/commit/7a76bb84710dd967d646898518b5456f60059c28))
+
 # [1.4.0](https://github.com/adobe/helix-epsagon/compare/v1.3.13...v1.4.0) (2020-08-24)
 
 
