@@ -74,47 +74,60 @@ function traceActionStatus(action) {
       };
     }
 
-    const memBegin = process.memoryUsage().rss;
-    const age = Date.now() - startTime;
     numInvocations += 1;
     // eslint-disable-next-line no-underscore-dangle
     const activationId = process.env.__OW_ACTIVATION_ID;
     runningActivations.add(activationId);
+
+    const begin = {
+      mem: process.memoryUsage().rss,
+      age: Date.now() - startTime,
+      concurrency: runningActivations.size,
+    };
+
     log.infoFields('action-status-begin', {
-      status: {
-        mem_beg: memBegin,
-      },
       container: {
-        age,
         uuid,
         numInvocations,
-        concurrency: runningActivations.size,
+        begin,
       },
     });
     try {
       addToMetadata(log, {
-        mem_beg: memBegin,
         container: {
-          age,
           uuid,
           numInvocations,
-          concurrency: runningActivations.size,
+          begin,
         },
       });
       return await action(params);
     } finally {
-      const memEnd = process.memoryUsage().rss;
-      const memDelta = memEnd - memBegin;
+      const end = {
+        mem: process.memoryUsage().rss,
+        age: Date.now() - startTime,
+        concurrency: runningActivations.size,
+      };
+      const delta = {
+        mem: end.mem - begin.mem,
+        age: end.age - begin.age,
+      };
       log.infoFields('action-status-end', {
-        status: {
-          mem_beg: memBegin,
-          mem_end: memEnd,
-          mem_delta: memDelta,
+        container: {
+          uuid,
+          numInvocations,
+          begin,
+          end,
+          delta,
         },
       });
       addToMetadata(log, {
-        mem_end: memEnd,
-        mem_delta: memDelta,
+        container: {
+          uuid,
+          numInvocations,
+          begin,
+          end,
+          delta,
+        },
       });
       runningActivations.delete(activationId);
     }

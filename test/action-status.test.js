@@ -81,15 +81,15 @@ describe('Action Status Tests', () => {
     assert.equal(result, 'ok');
 
     const args1 = eventStub.getCall(0).args[1];
-    assert.ok(args1.mem_beg);
     assert.ok(args1.container.uuid);
-    assert.ok(args1.container.age);
-    assert.equal(args1.container.concurrency, 1);
+    assert.ok(args1.container.begin.mem);
+    assert.ok(args1.container.begin.age);
+    assert.equal(args1.container.begin.concurrency, 1);
     assert.equal(args1.container.numInvocations, 1);
 
     const args2 = eventStub.getCall(1).args[1];
-    assert.ok(args2.mem_end);
-    assert.equal(args2.mem_delta, args2.mem_end - args1.mem_beg);
+    assert.ok(args2.container.end.mem);
+    assert.equal(args2.container.delta.mem, args2.container.end.mem - args2.container.begin.mem);
 
     // run again
     const result2 = await wrap(simpleAction).with(epsagon)({
@@ -98,10 +98,10 @@ describe('Action Status Tests', () => {
     });
     assert.equal(result2, 'ok');
     const args3 = eventStub.getCall(2).args[1];
-    assert.ok(args3.mem_beg);
+    assert.ok(args1.container.begin.mem);
     assert.equal(args3.container.uuid, args1.container.uuid);
-    assert.ok(args3.container.age);
-    assert.equal(args3.container.concurrency, 1);
+    assert.ok(args3.container.begin.age);
+    assert.equal(args3.container.begin.concurrency, 1);
     assert.equal(args3.container.numInvocations, 2);
   });
 
