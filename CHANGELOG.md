@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/adobe/helix-epsagon/compare/v1.5.0...v1.5.1) (2020-09-02)
+
+
+### Bug Fixes
+
+* **status:** be resilient against errors when getting memory ([#120](https://github.com/adobe/helix-epsagon/issues/120)) ([a544ec5](https://github.com/adobe/helix-epsagon/commit/a544ec53f3fd8db65cddcc3d9c11155056ea4701)), closes [#119](https://github.com/adobe/helix-epsagon/issues/119)
+
 # [1.5.0](https://github.com/adobe/helix-epsagon/compare/v1.4.0...v1.5.0) (2020-08-26)
 
 
