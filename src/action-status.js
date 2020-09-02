@@ -40,6 +40,20 @@ async function getNumOpenFileHandles(log) {
 }
 
 /**
+ * Returns the RSS memory usage.
+ * @param {Logger} log Logger.
+ * @returns {number} the memory usage or -1 if an error occurs.
+ */
+function getRssMemory(log) {
+  try {
+    return process.memoryUsage().rss;
+  } catch (e) /* istanbul ignore next */ {
+    log.error('error while retrieving memory', e);
+    return -1;
+  }
+}
+
+/**
  * Add a metadata to the runner of the current trace.
  */
 function addToMetadata(log, map) {
@@ -80,7 +94,7 @@ function traceActionStatus(action) {
     runningActivations.add(activationId);
 
     const begin = {
-      mem: process.memoryUsage().rss,
+      mem: getRssMemory(log),
       age: Date.now() - startTime,
       concurrency: runningActivations.size,
     };
@@ -102,10 +116,12 @@ function traceActionStatus(action) {
       });
       return await action(params);
     } finally {
+      const concurrency = runningActivations.size;
+      runningActivations.delete(activationId);
       const end = {
-        mem: process.memoryUsage().rss,
+        mem: getRssMemory(log),
         age: Date.now() - startTime,
-        concurrency: runningActivations.size,
+        concurrency,
       };
       const delta = {
         mem: end.mem - begin.mem,
@@ -129,7 +145,6 @@ function traceActionStatus(action) {
           delta,
         },
       });
-      runningActivations.delete(activationId);
     }
   };
 }
