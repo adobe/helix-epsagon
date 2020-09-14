@@ -1,3 +1,11 @@
+## [1.5.2](https://github.com/adobe/helix-epsagon/compare/v1.5.1...v1.5.2) (2020-09-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency epsagon to v1.84.1 ([4735850](https://github.com/adobe/helix-epsagon/commit/4735850d68f46731ef6b88c943dcc1344b5dd7ed))
+* **deps:** update external fixes ([83d1e8c](https://github.com/adobe/helix-epsagon/commit/83d1e8ccd56325d57a6a0ac972d416ba30562f45))
+
 ## [1.5.1](https://github.com/adobe/helix-epsagon/compare/v1.5.0...v1.5.1) (2020-09-02)
 
 
