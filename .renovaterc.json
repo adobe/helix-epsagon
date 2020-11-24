@@ -7,6 +7,14 @@
       "schedule": [
         "at any time"
       ]
+    },
+    {
+      "groupName": "external fixes",
+      "updateTypes": ["patch", "pin", "digest", "minor"],
+      "automerge": true,
+      "schedule": ["after 2pm on Saturday"],
+      "packagePatterns": ["^.+"],
+      "excludePackagePatterns": ["^@adobe/", "epsagon"]
     }
   ]
 }
