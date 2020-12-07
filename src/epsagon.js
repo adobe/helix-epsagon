@@ -60,6 +60,7 @@ function epsagon(action, opts = {}) {
     httpErrorStatusCode: 500,
     urlPatternsToIgnore: ['api.coralogix.com'],
     disableHttpResponseBodyCapture: true,
+    removeIgnoredKeys: true,
     ...opts,
   };
 

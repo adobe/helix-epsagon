@@ -134,6 +134,7 @@ describe('Index Tests', () => {
       sendTimeout: 2000,
       token_param: 'EPSAGON_TOKEN',
       httpErrorStatusCode: 500,
+      removeIgnoredKeys: true,
       urlPatternsToIgnore: [
         'api.coralogix.com',
       ],
@@ -170,6 +171,7 @@ describe('Index Tests', () => {
       sendTimeout: 3000,
       token_param: 'MY_TOKEN',
       httpErrorStatusCode: 500,
+      removeIgnoredKeys: true,
       urlPatternsToIgnore: [
         'api.logger.com',
       ],
