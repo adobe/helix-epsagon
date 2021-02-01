@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-epsagon",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "Helix Epsagon Support",
   "main": "src/index.js",
   "types": "src/index.d.ts",
