@@ -61,6 +61,7 @@ function epsagon(action, opts = {}) {
     urlPatternsToIgnore: ['api.coralogix.com'],
     disableHttpResponseBodyCapture: true,
     removeIgnoredKeys: true,
+    sendBatch: false,
     ...opts,
   };
 

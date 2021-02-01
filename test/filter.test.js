@@ -20,10 +20,7 @@ const { epsagon } = require('../src/index.js');
 
 const simpleAction = async () => {
   // create own context and disable http2
-  const context = fetchAPI.context({
-    httpProtocol: 'http1',
-    httpsProtocols: ['http1'],
-  });
+  const context = fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] });
   const { fetch } = context;
 
   // issue a request with authorization
@@ -50,17 +47,13 @@ const simpleAction = async () => {
   }
   await response.buffer();
 
-  await context.disconnectAll();
+  await context.reset();
   return {
     body: 'ok',
   };
 };
 
 describe('Filter Tests', () => {
-  after(async () => {
-    await fetchAPI.disconnectAll();
-  });
-
   it('filters out secrets from action params', async () => {
     const actId = crypto.randomBytes(16).toString('hex');
     Object.assign(process.env, {
@@ -117,12 +110,11 @@ describe('Filter Tests', () => {
     const headers = traces[1].resource.metadata.request_headers;
     delete headers['epsagon-trace-id'];
     assert.deepEqual(headers, {
+      accept: '*/*',
+      'accept-encoding': 'gzip,deflate,br',
       host: 'example.com',
       other: 'test',
-      accept: 'application/json,text/*;q=0.9,*/*;q=0.8',
-      'accept-encoding': 'br;q=1, gzip;q=0.8, deflate;q=0.5',
-      connection: 'keep-alive',
-      'user-agent': 'helix-fetch',
+      'user-agent': 'helix-fetch/2.1.0',
     });
     // the 3rd trace is the post to okta. ensure that the request_body is empty.
     assert.equal(traces[2].resource.metadata.request_body, undefined);
