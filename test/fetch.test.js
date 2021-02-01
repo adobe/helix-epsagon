@@ -17,10 +17,7 @@ const fetchAPI = require('@adobe/helix-fetch');
 
 async function testFetch() {
   // create own context and disable http2
-  const context = fetchAPI.context({
-    httpProtocol: 'http1',
-    httpsProtocols: ['http1'],
-  });
+  const context = fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] });
   try {
     const resp = await context.fetch('https://raw.githubusercontent.com/adobe/helix-shared/master/package.json');
     const text = await resp.text();
@@ -29,7 +26,7 @@ async function testFetch() {
       body: text,
     };
   } finally {
-    await context.disconnectAll();
+    await context.reset();
   }
 }
 
@@ -51,10 +48,6 @@ async function run(params) {
 }
 
 describe('Helix Fetch', () => {
-  after(async () => {
-    await fetchAPI.disconnectAll();
-  });
-
   it('Runs action with helix fetch.', async () => {
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/tripod/epsagon-testing@1.0.2',
