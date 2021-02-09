@@ -54,7 +54,7 @@ const simpleAction = async () => {
 };
 
 describe('Filter Tests', () => {
-  it('filters out secrets from action params', async () => {
+  it.skip('filters out secrets from action params', async () => {
     const actId = crypto.randomBytes(16).toString('hex');
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/helix/helix-epsagon@1.0.2',
