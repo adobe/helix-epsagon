@@ -1,3 +1,10 @@
+## [1.5.8](https://github.com/adobe/helix-epsagon/compare/v1.5.7...v1.5.8) (2021-02-09)
+
+
+### Bug Fixes
+
+* **deps:** update external fixes ([#156](https://github.com/adobe/helix-epsagon/issues/156)) ([f3e8bf1](https://github.com/adobe/helix-epsagon/commit/f3e8bf1c2317db720f9db4e74ba69cb92651a613))
+
 ## [1.5.7](https://github.com/adobe/helix-epsagon/compare/v1.5.6...v1.5.7) (2021-02-01)
 
 
