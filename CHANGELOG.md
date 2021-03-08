@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/adobe/helix-epsagon/compare/v1.5.8...v1.6.0) (2021-03-08)
+
+
+### Features
+
+* **aws:** add instrumntation for AWS ([#171](https://github.com/adobe/helix-epsagon/issues/171)) ([4c7c679](https://github.com/adobe/helix-epsagon/commit/4c7c6791a7a1e74c66b41fe73bfef54b3a4683a7))
+
 ## [1.5.8](https://github.com/adobe/helix-epsagon/compare/v1.5.7...v1.5.8) (2021-02-09)
 
 
