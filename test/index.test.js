@@ -26,16 +26,20 @@ const simpleAction = () => 'ok';
 
 let epsagonified = 0;
 
-const wrapperStub = sinon.stub().callsFake((action) => (params) => {
+const wrapperStub = sinon.stub().callsFake((action) => (...args) => {
   epsagonified += 1;
-  return action(params);
+  return action(...args);
 });
 
-const actionStatusStub = sinon.stub().callsFake((action) => (params) => action(params));
+const actionStatusStub = sinon.stub().callsFake((action) => (...args) => action(...args));
+
+const epsagonInitStub = sinon.stub().callsFake(() => {});
 
 const epsagon = proxyquire('../src/epsagon.js', {
   epsagon: {
     openWhiskWrapper: wrapperStub,
+    lambdaWrapper: wrapperStub,
+    init: epsagonInitStub,
   },
   './action-status.js': actionStatusStub,
 });
@@ -45,6 +49,7 @@ describe('Index Tests', () => {
   beforeEach(() => {
     wrapperStub.resetHistory();
     actionStatusStub.resetHistory();
+    epsagonInitStub.resetHistory();
     activationId = crypto.randomBytes(16).toString('hex');
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/helix/helix-epsagon@1.0.2',
@@ -60,6 +65,7 @@ describe('Index Tests', () => {
     delete process.env.__OW_ACTIVATION_ID;
     delete process.env.__OW_API_HOST;
     delete process.env.__OW_NAMESPACE;
+    delete process.env.AWS_LAMBDA_FUNCTION_NAME;
   });
 
   it('action w/o token does not instrument epsagon', async () => {
@@ -141,6 +147,42 @@ describe('Index Tests', () => {
       ],
       disableHttpResponseBodyCapture: true,
     });
+  });
+
+  it('function with token instruments epsagon', async () => {
+    process.env.AWS_LAMBDA_FUNCTION_NAME = 'foo-bar';
+    const expected = epsagonified + 1;
+    const result = await wrap(simpleAction).with(epsagon, { token: 'foo-bar' })({
+      ...DEFAULT_PARAMS,
+    });
+    assert.equal(result, 'ok');
+    assert.equal(epsagonified, expected, 'epsagon instrumented');
+
+    // check called with default args
+    const call = epsagonInitStub.getCall(0);
+    assert.deepEqual(call.args[0], {
+      appName: 'Helix Services',
+      ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authorization', 'request_body'],
+      metadataOnly: false,
+      sendTimeout: 2000,
+      token_param: 'EPSAGON_TOKEN',
+      httpErrorStatusCode: 500,
+      removeIgnoredKeys: true,
+      sendBatch: false,
+      urlPatternsToIgnore: [
+        'api.coralogix.com',
+      ],
+      disableHttpResponseBodyCapture: true,
+      token: 'foo-bar',
+    });
+  });
+
+  it('function w/o token does not instrument epsagon', async () => {
+    process.env.AWS_LAMBDA_FUNCTION_NAME = 'foo-bar';
+    const expected = epsagonified;
+    const result = await wrap(simpleAction).with(epsagon)(DEFAULT_PARAMS);
+    assert.equal('ok', result);
+    assert.equal(expected, epsagonified, 'epsagon not instrumented');
   });
 
   it('can change epsagon options', async () => {
