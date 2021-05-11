@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/adobe/helix-epsagon/compare/v1.6.4...v1.6.5) (2021-05-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency epsagon to v1.110.0 ([#192](https://github.com/adobe/helix-epsagon/issues/192)) ([ea88bc0](https://github.com/adobe/helix-epsagon/commit/ea88bc0810718f1ffe5ef84749a162da7be7aae2))
+
 ## [1.6.4](https://github.com/adobe/helix-epsagon/compare/v1.6.3...v1.6.4) (2021-04-12)
 
 
