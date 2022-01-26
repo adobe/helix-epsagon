@@ -74,7 +74,7 @@ describe('Action Status Tests', () => {
 
   it('action status reports stats', async () => {
     currentRunner = {};
-    const result = await wrap(simpleAction).with(epsagon)({
+    const result = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper)({
       ...DEFAULT_PARAMS,
       EPSAGON_TOKEN: '1234',
     });
@@ -92,7 +92,7 @@ describe('Action Status Tests', () => {
     assert.equal(args2.container.delta.mem, args2.container.end.mem - args2.container.begin.mem);
 
     // run again
-    const result2 = await wrap(simpleAction).with(epsagon)({
+    const result2 = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper)({
       ...DEFAULT_PARAMS,
       EPSAGON_TOKEN: '1234',
     });
@@ -107,7 +107,7 @@ describe('Action Status Tests', () => {
 
   it('action status does not report stat with no espagon', async () => {
     currentRunner = null;
-    const result = await wrap(simpleAction).with(epsagon)({
+    const result = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper)({
       ...DEFAULT_PARAMS,
       EPSAGON_TOKEN: '1234',
     });
