@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/adobe/helix-epsagon/compare/v1.6.9...v2.0.0) (2022-01-27)
+
+
+### Features
+
+* create dedicated universal wrappers ([#257](https://github.com/adobe/helix-epsagon/issues/257)) ([ff32806](https://github.com/adobe/helix-epsagon/commit/ff32806c1b34aaf295452365d39051035cb6b94d))
+
+
+### BREAKING CHANGES
+
+* the default export can no longer be used as wrapper.
+
 ## [1.6.9](https://github.com/adobe/helix-epsagon/compare/v1.6.8...v1.6.9) (2021-09-11)
 
 
