@@ -45,6 +45,12 @@ export declare interface EpsagonOptions {
   ignoredKeys?: Array<RegExp|string>,
 
   /**
+   * Function path that is ignored.
+   * @default '/_status_check/healthcheck.json'
+   */
+  ignoredPath?: string,
+
+  /**
    * Array of patterns for urls to ignore in traces.
    * @default ['api.coralogix.com']
    */
@@ -61,23 +67,19 @@ export declare interface EpsagonOptions {
  * Wrap function that returns an OpenWhisk function is automatically instrumented with epsagon,
  * if the `EPSAGON_TOKEN` action parameter is present.
  *
- * **Usage:**
- *
- * ```js
- * const { wrap } = require('@adobe/openwhisk-action-utils');
- * const { epsagon } = require('@adobe/helix-epsagon');
- *
- * async function main(params) {
- *   //…my action code…
- * }
- *
- * module.exports.main = wrap(main)
- *   .with(epsagon);
- * ```
- *
  * @function logger
  * @param {ActionFunction} fn - original OpenWhisk action main function
  * @param {EpsagonOptions} [opts] - optional options.
  * @returns {ActionFunction} a new function with the same signature as your original main function
  */
-export declare function epsagon(fn: ActionFunction, opts: EpsagonOptions): ActionFunction;
+export declare function openwhiskEpsagonWapper(fn: ActionFunction, opts: EpsagonOptions): ActionFunction;
+
+/**
+ * Wrap function that returns a lambda handler that is automatically instrumented with epsagon,
+ * if the `EPSAGON_TOKEN` action parameter is present.
+ *
+ * @param {ActionFunction} fn - original lambda handler function
+ * @param {EpsagonOptions} [opts] - optional options.
+ * @returns {ActionFunction} a new function with the same signature as your original main function
+ */
+export declare function lambdaEpsagonWrapper(fn: ActionFunction, opts: EpsagonOptions): ActionFunction;

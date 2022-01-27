@@ -46,11 +46,13 @@ const epsagon = proxyquire('../src/epsagon.js', {
 
 describe('Index Tests', () => {
   let activationId;
+  let processEnvCopy;
   beforeEach(() => {
     wrapperStub.resetHistory();
     actionStatusStub.resetHistory();
     epsagonInitStub.resetHistory();
     activationId = crypto.randomBytes(16).toString('hex');
+    processEnvCopy = { ...process.env };
     Object.assign(process.env, {
       __OW_ACTION_NAME: '/helix/helix-epsagon@1.0.2',
       __OW_ACTION_VERSION: '0.0.3',
@@ -60,82 +62,33 @@ describe('Index Tests', () => {
     });
   });
   afterEach(() => {
-    delete process.env.__OW_ACTION_NAME;
-    delete process.env.__OW_ACTION_VERSION;
-    delete process.env.__OW_ACTIVATION_ID;
-    delete process.env.__OW_API_HOST;
-    delete process.env.__OW_NAMESPACE;
-    delete process.env.AWS_LAMBDA_FUNCTION_NAME;
+    process.env = processEnvCopy;
   });
 
   it('action w/o token does not instrument epsagon', async () => {
     const expected = epsagonified;
-    const result = await wrap(simpleAction).with(epsagon)(DEFAULT_PARAMS);
-    assert.equal('ok', result);
-    assert.equal(expected, epsagonified, 'epsagon not instrumented');
-  });
-
-  it('adds x-last-activation-token for web-actions', async () => {
-    const expected = epsagonified;
-    const result = await wrap(() => ({ body: 'ok' })).with(epsagon)({
-      ...DEFAULT_PARAMS,
-      __ow_method: 'get',
-    });
-    assert.deepEqual(result, {
-      body: 'ok',
-      headers: {
-        'x-last-activation-id': activationId,
-      },
-    });
-    assert.equal(expected, epsagonified, 'epsagon not instrumented');
-  });
-
-  it('adds x-last-activation-token for async web-actions', async () => {
-    const expected = epsagonified;
-    const result = await wrap(async () => ({ body: 'ok' })).with(epsagon)({
-      ...DEFAULT_PARAMS,
-      __ow_method: 'get',
-    });
-    assert.deepEqual(result, {
-      body: 'ok',
-      headers: {
-        'x-last-activation-id': activationId,
-      },
-    });
-    assert.equal(expected, epsagonified, 'epsagon not instrumented');
-  });
-
-  it('adds x-last-activation-token for web-actions with header', async () => {
-    const expected = epsagonified;
-    const result = await wrap(() => ({ body: 'ok', headers: {} })).with(epsagon)({
-      ...DEFAULT_PARAMS,
-      __ow_method: 'get',
-    });
-    assert.deepEqual(result, {
-      body: 'ok',
-      headers: {
-        'x-last-activation-id': activationId,
-      },
-    });
-    assert.equal(expected, epsagonified, 'epsagon not instrumented');
+    const result = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper)(DEFAULT_PARAMS);
+    assert.strictEqual('ok', result);
+    assert.strictEqual(expected, epsagonified, 'epsagon not instrumented');
   });
 
   it('action with token instruments epsagon', async () => {
     const expected = epsagonified + 1;
-    const result = await wrap(simpleAction).with(epsagon)({
+    const result = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper)({
       ...DEFAULT_PARAMS,
       EPSAGON_TOKEN: '1234',
     });
-    assert.equal(result, 'ok');
-    assert.equal(epsagonified, expected, 'epsagon instrumented');
+    assert.strictEqual(result, 'ok');
+    assert.strictEqual(epsagonified, expected, 'epsagon instrumented');
 
     // check called with default args
     const statusCall = actionStatusStub.getCall(0);
     assert.strictEqual(statusCall.args[0], simpleAction);
     const call = wrapperStub.getCall(0);
-    assert.deepEqual(call.args[1], {
+    assert.deepStrictEqual(call.args[1], {
       appName: 'Helix Services',
       ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authorization', 'request_body'],
+      ignoredPath: '/_status_check/healthcheck.json',
       metadataOnly: false,
       sendTimeout: 2000,
       token_param: 'EPSAGON_TOKEN',
@@ -150,19 +103,20 @@ describe('Index Tests', () => {
   });
 
   it('function with token instruments epsagon', async () => {
-    process.env.AWS_LAMBDA_FUNCTION_NAME = 'foo-bar';
+    process.env.EPSAGON_TOKEN = 'foo-bar';
     const expected = epsagonified + 1;
-    const result = await wrap(simpleAction).with(epsagon, { token: 'foo-bar' })({
+    const result = await wrap(simpleAction).with(epsagon.lambdaEpsagonWrapper)({
       ...DEFAULT_PARAMS,
     });
-    assert.equal(result, 'ok');
-    assert.equal(epsagonified, expected, 'epsagon instrumented');
+    assert.strictEqual(result, 'ok');
+    assert.strictEqual(epsagonified, expected, 'epsagon instrumented');
 
     // check called with default args
     const call = epsagonInitStub.getCall(0);
-    assert.deepEqual(call.args[0], {
+    assert.deepStrictEqual(call.args[0], {
       appName: 'Helix Services',
       ignoredKeys: [/^[A-Z][A-Z0-9_]+$/, /^__ow_.*/, 'authorization', 'request_body'],
+      ignoredPath: '/_status_check/healthcheck.json',
       metadataOnly: false,
       sendTimeout: 2000,
       token_param: 'EPSAGON_TOKEN',
@@ -177,19 +131,31 @@ describe('Index Tests', () => {
     });
   });
 
+  it('function on ignored path does not use epsagon', async () => {
+    process.env.EPSAGON_TOKEN = 'foo-bar';
+    const expected = epsagonified + 1;
+    const result = await wrap(simpleAction).with(epsagon.lambdaEpsagonWrapper)({
+      pathParameters: {
+        path: '/_status_check/healthcheck.json',
+      },
+    });
+    assert.strictEqual(result, 'ok');
+    assert.strictEqual(expected, epsagonified, 'epsagon not instrumented');
+  });
+
   it('function w/o token does not instrument epsagon', async () => {
-    process.env.AWS_LAMBDA_FUNCTION_NAME = 'foo-bar';
     const expected = epsagonified;
-    const result = await wrap(simpleAction).with(epsagon)(DEFAULT_PARAMS);
-    assert.equal('ok', result);
-    assert.equal(expected, epsagonified, 'epsagon not instrumented');
+    const result = await wrap(simpleAction).with(epsagon.lambdaEpsagonWrapper)(DEFAULT_PARAMS);
+    assert.strictEqual('ok', result);
+    assert.strictEqual(expected, epsagonified, 'epsagon not instrumented');
   });
 
   it('can change epsagon options', async () => {
     const expected = epsagonified + 1;
-    const result = await wrap(simpleAction).with(epsagon, {
+    const result = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper, {
       appName: 'test service',
       ignoredKeys: [],
+      ignoredPath: '/foo',
       metadataOnly: true,
       sendTimeout: 3000,
       token_param: 'MY_TOKEN',
@@ -200,16 +166,17 @@ describe('Index Tests', () => {
       ...DEFAULT_PARAMS,
       MY_TOKEN: '1234',
     });
-    assert.equal(result, 'ok');
-    assert.equal(epsagonified, expected, 'epsagon instrumented');
+    assert.strictEqual(result, 'ok');
+    assert.strictEqual(epsagonified, expected, 'epsagon instrumented');
 
     // check called with default args
     const statusCall = actionStatusStub.getCall(0);
     assert.strictEqual(statusCall.args[0], simpleAction);
     const call = wrapperStub.getCall(0);
-    assert.deepEqual(call.args[1], {
+    assert.deepStrictEqual(call.args[1], {
       appName: 'test service',
       ignoredKeys: [],
+      ignoredPath: '/foo',
       metadataOnly: true,
       sendTimeout: 3000,
       token_param: 'MY_TOKEN',
@@ -225,18 +192,18 @@ describe('Index Tests', () => {
 
   it('can use different token param', async () => {
     const expected = epsagonified + 1;
-    const result = await wrap(simpleAction).with(epsagon, {
+    const result = await wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper, {
       token_param: 'MY_TOKEN',
     })({
       ...DEFAULT_PARAMS,
       MY_TOKEN: '1234',
     });
-    assert.equal(result, 'ok');
-    assert.equal(epsagonified, expected, 'epsagon instrumented');
+    assert.strictEqual(result, 'ok');
+    assert.strictEqual(epsagonified, expected, 'epsagon instrumented');
   });
 
   it('index function runs epsagon once for each invocation', async () => {
-    const main = wrap(simpleAction).with(epsagon);
+    const main = wrap(simpleAction).with(epsagon.openwhiskEpsagonWrapper);
 
     const expected = epsagonified + 2;
 
@@ -248,6 +215,6 @@ describe('Index Tests', () => {
       ...DEFAULT_PARAMS,
       EPSAGON_TOKEN: 'foobar',
     });
-    assert.equal(epsagonified, expected, 'epsagon instrumented');
+    assert.strictEqual(epsagonified, expected, 'epsagon instrumented');
   });
 });
