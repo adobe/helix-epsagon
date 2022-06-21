@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/adobe/helix-epsagon#readme",
   "dependencies": {
-    "epsagon": "1.123.0"
+    "epsagon": "1.123.1"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.3.2",
